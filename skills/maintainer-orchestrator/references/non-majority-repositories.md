@@ -200,3 +200,9 @@ Re-checks 2026-08-31: Kova 31/1021 (3.0%), clawrouter 86/312 (27.6%) — still n
 - openclaw/lighthouse — 2026-08-31: Peter 0/43 non-merge commits (Vincent Koc 43/43); gate failed, no override, triage skipped. Private repo.
 - openclaw/kitchen-sink — 2026-09-05: Peter 4/90 eligible non-merge commits (4.44%); Vincent Koc 69. Gate failed, no override on record, triage skipped (note: a 2026-08 wave landed dep PR #73 here without the gate; treat like punchcard).
 - openclaw/night-clawer (private) — 2026-09-05: Peter 0/40 non-merge commits (roboclaw-bot 14, VACInc 13, Vito Cappello 11). Gate failed, no override, triage skipped.
+| openclaw/clawsweeper | 1176/2744 (42.9%) | 2026-09-07 phase-three gate check |
+| openclaw/ocm | 4/927 (0.4%) | 2026-09-07 phase-three gate check |
+| openclaw/nix-openclaw-tools | 6/297 (2.0%) | 2026-09-07 phase-three gate check |
+| openclaw/lighthouse | 0/99 (0%) | 2026-09-07 phase-three gate check; private |
+| openclaw/openclaw-enterprise | 0/126 (0%) | 2026-09-07 phase-three gate check |
+| openclaw/infrastructure | 0/34 (0%) | 2026-09-07 phase-three gate check |
