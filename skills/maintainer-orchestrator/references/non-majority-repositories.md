@@ -206,3 +206,4 @@ Re-checks 2026-08-31: Kova 31/1021 (3.0%), clawrouter 86/312 (27.6%) — still n
 | openclaw/lighthouse | 0/99 (0%) | 2026-09-07 phase-three gate check; private |
 | openclaw/openclaw-enterprise | 0/126 (0%) | 2026-09-07 phase-three gate check |
 | openclaw/infrastructure | 0/34 (0%) | 2026-09-07 phase-three gate check |
+| openclaw/openclaw-windows-packaging | 0/24 (0%) | 2026-09-08 phase-three gate check; Linus Huang 20 |
