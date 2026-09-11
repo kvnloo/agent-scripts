@@ -124,14 +124,16 @@ do not update an existing owner and are not a durable fix for a respawn. Put
 literal values in the canonical definition's `env`; do not use placeholders
 that depend on those stripped variables. If an explicit endpoint is necessary,
 set `MCPORTER_CHROME_DEVTOOLS_RELAY_URL` there to the verified credential-free
-loopback CDP URL. Prefer discovery with a sufficient timeout over a guessed or
-hardcoded port, especially when several OpenClaw installations coexist.
+HTTP loopback base URL, for example `http://127.0.0.1:28799` after verifying
+that port. This override does not accept a WebSocket CDP URL such as
+`ws://127.0.0.1:28799/cdp`. Prefer discovery with a sufficient timeout over a
+guessed or hardcoded port, especially when several OpenClaw installations coexist.
 
 After changing canonical settings, let active calls drain and run
 `mcporter daemon stop`. If stop refuses because calls remain active, wait for
 them to finish and retry stop; proceed only after it succeeds. The next call
-starts a daemon with the saved settings,
-and subsequent respawns use the same configuration. Verify the relay decision
+starts a daemon with the saved settings, and subsequent respawns use the same
+configuration. Verify the relay decision
 with `mcporter daemon status --json` and repeat the readiness proof below.
 Check the installed mcporter version before relying on newer timeout defaults
 or explicit discovery-failure diagnostics; a source fix does not update an

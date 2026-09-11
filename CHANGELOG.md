@@ -6,7 +6,7 @@ summary: Timeline of guardrail helper changes mirrored from Sweetistics and rela
 
 ## Unreleased
 
-- Corrected browser relay timeout recovery to persist controls in mcporter's canonical Chrome definition, explain the 0.13.10 discovery fallback, and verify saved relay-only policy across daemon respawns.
+- Corrected browser relay timeout recovery to persist controls in mcporter's canonical Chrome definition, require HTTP base URLs for explicit overrides, explain the 0.13.10 discovery fallback, and verify saved relay-only policy across daemon respawns.
 
 - Pin macOS release credential runners to system Bash so the shared tmux server's PATH cannot select an incompatible shell.
 
