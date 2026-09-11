@@ -1583,7 +1583,8 @@ mac_release_prepare_codesign_keychain() {
     mac_release_die "Developer ID signing canary failed Apple trust validation"
   fi
   signature_info=$(codesign -dvvv "$probe_path" 2>&1)
-  if ! printf '%s\n' "$signature_info" | grep -q '^Authority=Developer ID Application:'; then
+  # Drain the report so an early match cannot turn printf's SIGPIPE into failure.
+  if ! printf '%s\n' "$signature_info" | grep '^Authority=Developer ID Application:' >/dev/null; then
     rm -rf "$probe_dir"
     mac_release_restore_codesign_keychains
     mac_release_die "Signing canary is not signed by a Developer ID Application identity"

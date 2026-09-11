@@ -58,6 +58,7 @@ jobs:
       - name: Test macOS release credential boundaries (synthetic)
         run: |
           /bin/bash skills/release-mac-app/scripts/mac-release.test.sh
+          /bin/bash skills/release-mac-app/scripts/mac-release-canary.test.sh
           /bin/bash skills/release-mac-app/scripts/mac-release-provider.test.sh
 
       - name: Test maintainer orchestrator worker boundary

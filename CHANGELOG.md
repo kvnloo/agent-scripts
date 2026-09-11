@@ -6,6 +6,8 @@ summary: Timeline of guardrail helper changes mirrored from Sweetistics and rela
 
 ## Unreleased
 
+- Fixed false macOS signing-canary failures on long signature reports while preserving Apple trust and Developer ID authority checks.
+
 - Run the Codex direct-route preflight regression suite in CI with a clean environment and temporary HOME, covering private-home auth delivery and secret-safe failures without live credentials.
 
 - Make Codex Keychain helper guidance independent of private reviewer HOME paths and add a secret-safe `--private-home` delivery diagnostic without changing reviewer isolation or provider selection.
