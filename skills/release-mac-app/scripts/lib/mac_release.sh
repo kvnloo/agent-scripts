@@ -423,7 +423,7 @@ if [[ -n "$MAC_RELEASE_OP_SERVICE_ACCOUNT_TOKEN_FILE" ]]; then
   export OP_SERVICE_ACCOUNT_TOKEN
 fi
 RUNNER
-    printf 'bash %q\n' "$script"
+    printf '/bin/bash %q\n' "$script"
   } >"$runner"
   chmod 700 "$runner"
 
@@ -433,7 +433,7 @@ RUNNER
   # Start directly: an interactive shell can discard input sent before its prompt is ready.
   op_window=$(tmux -S "$socket" new-window -d -t "$session" -n mac-release -P -F '#{window_id}' \
     /bin/bash --noprofile --norc -p -c \
-    "env -u BASH_ENV bash $(mac_release_tmux_quote "$runner"); printf '%s\n' \$? > $(mac_release_tmux_quote "$status_file")")
+    "env -u BASH_ENV /bin/bash $(mac_release_tmux_quote "$runner"); printf '%s\n' \$? > $(mac_release_tmux_quote "$status_file")")
 
   local deadline=$((SECONDS + ${MAC_RELEASE_OP_WAIT_SECONDS:-300}))
   until [[ -f "$status_file" ]]; do

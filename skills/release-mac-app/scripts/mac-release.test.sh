@@ -40,7 +40,7 @@ case " $* " in
       previous=$arg
     done
     [[ -n "$command_text" ]]
-    runner_path=${command_text#* bash }
+    runner_path=${command_text#* /bin/bash }
     runner_path=${runner_path%%;*}
     [[ -f "$runner_path" ]]
     work_dir=${runner_path%/*}

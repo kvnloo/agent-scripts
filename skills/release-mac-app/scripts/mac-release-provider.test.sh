@@ -19,6 +19,13 @@ umask 077
 mkdir "$test_root/bin"
 export MAC_RELEASE_TEST_ROOT=$test_root
 
+# The tmux server's PATH must not select the credential runner's shell.
+cat >"$test_root/bin/bash" <<'BASH_STUB'
+#!/bin/sh
+echo 'unexpected PATH-selected bash in credential runner' >&2
+exit 93
+BASH_STUB
+
 # Only the parser runs real Node. All credential, terminal and signing tools are stubs.
 cat >"$test_root/bin/node" <<'NODE_STUB'
 #!/bin/bash
@@ -75,7 +82,7 @@ case "$1" in
   new-window)
     [[ "$*" == 'new-window -d -t op-work -n mac-release -P -F #{window_id} /bin/bash --noprofile --norc -p -c '* ]]
     command_text=${!#}
-    runner_path=${command_text#* bash }
+    runner_path=${command_text#* /bin/bash }
     runner_path=${runner_path%%;*}
     work_dir=${runner_path%/*}
     [[ -f "$runner_path" ]]
