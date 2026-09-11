@@ -118,6 +118,20 @@ arguments and other settings:
 }
 ```
 
+The relay timeout bounds each discovery or authentication step; it does not
+extend the client's total operation deadline. Initial Chrome startup can run
+several discovery checks before MCP initialization and the requested tool call.
+On older installed clients, pair the canonical `20000` per-step setting with
+an explicit `--timeout 300000` on the initial call or schema listing. For example:
+
+```bash
+MCPORTER_CHROME_DEVTOOLS_RELAY_POLICY=require mcporter call chrome-devtools.list_pages --timeout 300000 --output text
+```
+
+Newer Chrome-specific outer defaults require an upgraded invoking client.
+Explicit `--timeout`, `MCPORTER_CALL_TIMEOUT`, and `MCPORTER_LIST_TIMEOUT`
+still override those defaults; a smaller override can cut startup short.
+
 The daemon intentionally strips inherited `MCPORTER_CHROME_DEVTOOLS_RELAY_*`
 and `OPENCLAW_*` controls from the canonical Chrome environment. Shell exports
 do not update an existing owner and are not a durable fix for a respawn. Put
@@ -211,9 +225,10 @@ without quoting or control-character errors.
 
 Other call mechanics worth knowing before a login flow:
 
-- The default call timeout is short (about five seconds). Real navigation,
-  snapshots, and consent pages routinely exceed it, and the failure looks
-  identical to a hung page. Pass `--timeout 30000` for anything interactive.
+- Generic client defaults are 60 seconds for calls and 30 seconds for listings,
+  separate from the relay's per-step discovery/authentication timeout. Slow
+  initial Chrome startup on older clients needs `--timeout 300000` as described
+  above. Choose an explicit timeout for later interactive work when needed.
 - `take_screenshot` with `filePath` is confined to the server's configured
   workspace roots and refuses arbitrary paths. Omit `filePath`, read the
   base64 image from `--output json`, and decode it locally.
