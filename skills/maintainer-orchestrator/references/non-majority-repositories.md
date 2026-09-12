@@ -210,3 +210,5 @@ Re-checks 2026-08-31: Kova 31/1021 (3.0%), clawrouter 86/312 (27.6%) — still n
 
 Owner-maintained overrides (Peter, 2026-09-08): [openclaw/clawsweeper](https://github.com/openclaw/clawsweeper) and the Nix repositories ([openclaw/nix-openclaw](https://github.com/openclaw/nix-openclaw), [openclaw/nix-openclaw-tools](https://github.com/openclaw/nix-openclaw-tools)) are Peter-owned and stay in routine orchestration scope despite non-majority commit share.
 - openclaw/clawpushrelay — 2026-09-11: Peter 0/13 eligible non-merge commits (0%). Gate failed, no override on record, triage skipped.
+- openclaw/telemetry — 2026-09-11: Peter 7/20 human non-merge commits (35%); Vincent Koc 11. Gate failed, no override, triage skipped.
+- openclaw/clawsweeper-state — 2026-09-11: 0/0 human commits (2,807 github-actions[bot] + 1 clawsweeper-ops). Gate undefined; bot-managed state repo, triage skipped (PR #1 remains NEEDS-PETER).
