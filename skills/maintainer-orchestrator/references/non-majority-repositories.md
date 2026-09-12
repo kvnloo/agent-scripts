@@ -209,3 +209,4 @@ Re-checks 2026-08-31: Kova 31/1021 (3.0%), clawrouter 86/312 (27.6%) — still n
 | openclaw/openclaw-windows-packaging | 0/24 (0%) | 2026-09-08 phase-three gate check; Linus Huang 20 |
 
 Owner-maintained overrides (Peter, 2026-09-08): [openclaw/clawsweeper](https://github.com/openclaw/clawsweeper) and the Nix repositories ([openclaw/nix-openclaw](https://github.com/openclaw/nix-openclaw), [openclaw/nix-openclaw-tools](https://github.com/openclaw/nix-openclaw-tools)) are Peter-owned and stay in routine orchestration scope despite non-majority commit share.
+- openclaw/clawpushrelay — 2026-09-11: Peter 0/13 eligible non-merge commits (0%). Gate failed, no override on record, triage skipped.
