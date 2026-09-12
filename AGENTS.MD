@@ -48,7 +48,7 @@
 - New API key: immediately store via 1Password service account. Temp file/env copies only current task.
 - User-owned Gmail service login: pre-approved; use saved creds, no ask. Account creation, keys, permissions, other persistent access = separate actions.
 - Test email/Google account: `clawdbot@gmail.com`.
-- OpenClaw deploy account: only `service@openclaw.org`.
+- OpenClaw deploy account: only `services@openclaw.org`.
 
 ## Project Defaults
 
