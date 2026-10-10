@@ -133,7 +133,11 @@ reserve_pkg() {
     echo "already taken: $name"
     return 0
   fi
-  if npm_authenticated access get status "$name" >/dev/null 2>&1; then
+  # Only a "public" status proves the name exists; the command also succeeds for
+  # unpublished names under a scope the account owns (seen 2026-10-10).
+  local status
+  status="$(npm_authenticated access get status "$name" 2>/dev/null || true)"
+  if printf '%s' "$status" | grep -qE '(^|[[:space:]:])public([[:space:]]|$)'; then
     echo "already reserved: $name"
     return 0
   fi
