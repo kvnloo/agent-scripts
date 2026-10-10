@@ -30,12 +30,13 @@ The required preflight treats this mismatch as fatal. Do not launch or resume Co
 1,050,000 total - 128,000 maximum output = 922,000 safe input
 ```
 
-Use the same safe input policy for all four direct-provider catalogue models:
+Use the same safe input policy for all five direct-provider catalogue models ([GPT-6.1 Sol](https://developers.openai.com/api/docs/models/gpt-6.1-sol) has the same 1,050,000-token window and 128,000-token output limit):
 
 - `gpt-5.6-sol`
 - `gpt-5.6-terra`
 - `gpt-5.6-luna`
 - `gpt-6-astra`
+- `gpt-6.1-sol`
 
 Preserve the operator's selected supported model when configuring context. The examples below use Astra; enabling large context does not authorize replacing another selected model.
 
@@ -45,7 +46,7 @@ Long-context requests above 272,000 input tokens use the provider's higher long-
 
 ## Required files
 
-`~/.codex/models-api-1m.json` must contain these values for all four model slugs while preserving the rest of each model entry:
+`~/.codex/models-api-1m.json` must contain these values for all five model slugs while preserving the rest of each model entry:
 
 ```json
 {
@@ -104,7 +105,7 @@ Use `$one-password` before handling the API key. The canonical value is the `OPE
 
 The Keychain item should allow `/usr/bin/security`. A Keychain read normally produces no prompt. A login Keychain locked after reboot, or a command launched via noninteractive SSH, can fail with error 36 (`User interaction is not allowed`). Do not work around that failure with a plaintext file or a long-lived secret daemon: unlock the host from its local graphical session, install the item there, then use Codex from that local session.
 
-Before the first fresh or resumed Codex launch on a configured machine, run the secret-safe preflight. It validates the direct-provider config, safe input and compaction values, all four catalogue entries, helper executable, and non-empty helper delivery without printing the credential or helper stderr:
+Before the first fresh or resumed Codex launch on a configured machine, run the secret-safe preflight. It validates the direct-provider config, safe input and compaction values, all five catalogue entries, helper executable, and non-empty helper delivery without printing the credential or helper stderr:
 
 ```zsh
 ruby ~/.codex/skills/agent-scripts/codex-huge-context/scripts/preflight.rb
@@ -157,7 +158,7 @@ Peter's current personal Mac scope is MacBook Pro; the London and two San Franci
 
 - config and catalogue backups;
 - root safe input, compaction threshold, and scope;
-- all four catalogue entries and their context values;
+- all five catalogue entries and their context values;
 - preflight result in the intended local user session;
 - `codex login status`, without showing any credential;
 - direct API probe result;
@@ -172,7 +173,7 @@ Run these in the intended local user session:
 ```zsh
 ruby ~/.codex/skills/agent-scripts/codex-huge-context/scripts/preflight.rb
 codex login status
-jq -r '.models[] | select(.slug == "gpt-5.6-sol" or .slug == "gpt-5.6-terra" or .slug == "gpt-5.6-luna" or .slug == "gpt-6-astra") | [.slug, .context_window, .max_context_window, .auto_compact_token_limit] | @tsv' ~/.codex/models-api-1m.json
+jq -r '.models[] | select(.slug == "gpt-5.6-sol" or .slug == "gpt-5.6-terra" or .slug == "gpt-5.6-luna" or .slug == "gpt-6-astra" or .slug == "gpt-6.1-sol") | [.slug, .context_window, .max_context_window, .auto_compact_token_limit] | @tsv' ~/.codex/models-api-1m.json
 codex exec --skip-git-repo-check 'Reply with exactly: direct-api-safe-context-ok' </dev/null
 ```
 

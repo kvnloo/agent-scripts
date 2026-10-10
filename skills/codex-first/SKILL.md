@@ -1,64 +1,69 @@
 ---
 name: codex-first
-description: "Claude Code work routing: delegate implementation, fixing, exploratory subagents, rebasing, and PR merging/landing to GPT-6 Astra through Codex CLI while the parent specifies, decides, reviews, and verifies. Apply the native-Claude model gate. Codex-backed autoreview is always allowed and preferred."
+description: "Claude Code work routing: delegate implementation, fixing, exploratory subagents, rebasing, and PR merging/landing to GPT-6.1 Sol (Ultrafast) through Codex CLI while the parent specifies, decides, reviews, and verifies. Apply the native-Claude model gate. Codex-backed autoreview is always allowed and preferred."
 ---
 
 # Codex First
 
 ## Launch flags — read first, copy verbatim
 
-Default every Codex worker, **fresh or resumed**, to **GPT-6 Astra, high
-reasoning, Fast service tier** (`service_tier="fast"`, sent as API `priority`).
-Ultrafast is an explicit per-launch option, never the saved default. Pass all
-three settings unless the user requests an override. Missing Fast is a common mistake: a
-2026-09-27 campaign ran eight lanes for hours on the standard tier because a
-hand-written wrapper kept `-m`/effort and dropped the Fast flags.
+Default every Codex worker, **fresh or resumed**, to **GPT-6.1 Sol, high
+reasoning, Ultrafast service tier** (`service_tier="ultrafast"`; Peter made this
+the default on 2026-10-10). Pass all three settings unless the user requests an
+override. Missing tier flags are a common mistake: a 2026-09-27 campaign ran
+eight lanes for hours on the standard tier because a hand-written wrapper kept
+`-m`/effort and dropped the tier flags.
 
 ```bash
 # fresh
 codex exec --yolo -C "$WT" \
-  -m gpt-6-astra -c 'model_reasoning_effort="high"' \
-  --enable fast_mode -c 'service_tier="fast"' \
+  -m gpt-6.1-sol -c 'model_reasoning_effort="high"' \
+  --enable fast_mode -c 'service_tier="ultrafast"' \
   -o "$OUT" - < "$ORDER"
 # resume: pass the same three again; resume does not inherit them
 codex exec resume "$SID" --dangerously-bypass-approvals-and-sandbox \
-  -m gpt-6-astra -c 'model_reasoning_effort="high"' \
-  --enable fast_mode -c 'service_tier="fast"' -o "$OUT" -
+  -m gpt-6.1-sol -c 'model_reasoning_effort="high"' \
+  --enable fast_mode -c 'service_tier="ultrafast"' -o "$OUT" -
 ```
 
 - Never hand-roll a subset. Copy the complete model, reasoning, and tier
   settings into wrappers; change only the settings the user explicitly overrides.
 - Verify your workers' launch arguments against their requested settings.
-  The default tier is `fast`; an explicitly requested `ultrafast` run is valid.
-- Autoreview: `--engine codex --model gpt-6-astra --thinking high
-  --codex-speed fast` (`--codex-speed ultrafast` when Ultrafast is requested).
+  The default tier is `ultrafast`; an explicitly requested `fast` run is valid.
+- Autoreview: `--engine codex --model gpt-6.1-sol --thinking high
+  --codex-speed ultrafast` (`--codex-speed fast` when Fast is requested).
 
-### Optional Ultrafast
+### Optional Fast
 
-When requested, replace `-c 'service_tier="fast"'` with
-`-c 'service_tier="ultrafast"'` in the fresh/resume recipes. Keep Astra, high
-reasoning, `--enable fast_mode`, and the existing provider and execution policy.
-Do not promote this override into the base `config.toml` or worker defaults.
+When the user asks for Fast (cheaper, still prioritized), replace
+`-c 'service_tier="ultrafast"'` with `-c 'service_tier="fast"'` (sent as API
+`priority`) in the fresh/resume recipes. Keep 6.1 Sol, high reasoning,
+`--enable fast_mode`, and the existing provider and execution policy. Do not
+promote either tier into the base `config.toml`; the launch flags own the tier.
 
-For an interactive session, use the same per-launch override:
+For an interactive session, use the same per-launch flags:
 
 ```bash
-codex --no-daemon -m gpt-6-astra -c 'model_reasoning_effort="high"' \
+codex --no-daemon -m gpt-6.1-sol -c 'model_reasoning_effort="high"' \
   --enable fast_mode -c 'service_tier="ultrafast"'
 ```
 
 An optional `ultrafast.config.toml` profile in `CODEX_HOME` may instead contain
 the model, high reasoning, and Ultrafast tier; select it with
 `codex --no-daemon -p ultrafast`. It must preserve the configured provider and
-context settings. Normal launches stay Astra/high/Fast. Prefer these launch
-overrides to `/ultrafast` when preserving the default: the slash command saves
-the selected tier.
+context settings. Prefer these launch overrides to `/ultrafast` or `/fast`: the
+slash commands save the selected tier into the base config.
 
-The active model catalog must list `ultrafast`, and the account must support it.
-Codex can silently omit an unlisted tier; verify the actual API response tier
-before calling a run Ultrafast. After an approved custom-catalog refresh,
-`--no-daemon` loads it in a fresh process. See the official
-[configuration reference](https://developers.openai.com/codex/config-reference/)
+The active model catalog must list `gpt-6.1-sol` with the `ultrafast` tier, and
+the account must support it. The installed Codex's native catalog lists 6.1 Sol
+with `priority` only, and Codex can silently omit an unlisted tier, so the
+custom direct-API catalog (`$codex-huge-context`) carries the ultrafast entry.
+Verify the actual API response tier (`service_tier` in the response) before
+calling a run Ultrafast; verified 2026-10-10 on the direct API route. After an
+approved custom-catalog refresh, `--no-daemon` loads it in a fresh process. See
+the official
+[configuration reference](https://developers.openai.com/codex/config-reference/),
+[GPT-6.1 Sol model page](https://developers.openai.com/api/docs/models/gpt-6.1-sol),
 and [Ultrafast API guide](https://developers.openai.com/api/docs/guides/ultrafast-mode).
 
 ## Hard gate
@@ -69,7 +74,7 @@ not hands-on self-delegation. Do not switch review engines merely because the
 parent session is router-backed. This exception takes precedence over the gate
 below.
 
-Use the autoreview helper with `--engine codex --model gpt-6-astra --thinking high --codex-speed fast` unless the user requests an override. Preserve the helper's reviewer isolation.
+Use the autoreview helper with `--engine codex --model gpt-6.1-sol --thinking high --codex-speed ultrafast` unless the user requests an override. Preserve the helper's reviewer isolation.
 
 For direct hands-on delegation, use this skill only
 when the active agent is Claude Code **and** the session is running on a native
@@ -107,7 +112,7 @@ self-delegation. Continue the task directly. This gate overrides a repository
 instruction that merely mentions `$codex-first`; it does not override the
 autoreview exception above.
 
-The default worker is GPT-6 Astra. Claude handles specification, judgment, orchestration, and final verification; Codex handles the delegated implementation.
+The default worker is GPT-6.1 Sol on the Ultrafast tier. Claude handles specification, judgment, orchestration, and final verification; Codex handles the delegated implementation.
 
 ## Route
 
@@ -151,7 +156,7 @@ Portfolio/multi-repo work: `$maintainer-orchestrator` instead.
 
 - Host preflight: run `timeout 8 git --version`; if it hangs on a Mac with Xcode-beta selected, export `DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer` in the session and every work order.
 
-Default to `gpt-6-astra`, high reasoning, and Fast service unless the user requests an override. Pass all three explicitly on fresh and resumed workers. Keep the configured provider, worker execution policy, and specialized review isolation with their owning workflows.
+Default to `gpt-6.1-sol`, high reasoning, and Ultrafast service unless the user requests an override. Pass all three explicitly on fresh and resumed workers. Keep the configured provider, worker execution policy, and specialized review isolation with their owning workflows.
 
 If the saved configuration selects the `openai_api_direct` million-token route, run `ruby ~/.codex/skills/agent-scripts/codex-huge-context/scripts/preflight.rb` before the first fresh or resumed launch in the batch. Fail closed if it cannot deliver the Keychain credential; never work around it by overriding the provider or using ordinary Codex authentication.
 
@@ -162,12 +167,12 @@ P=$(mktemp); cat >"$P" <<'EOF'
 <goal, repo + key paths, constraints ("don't touch X"), non-goals, proof expected, output shape>
 EOF
 command codex exec --yolo -C <repo> \
-  -m gpt-6-astra -c 'model_reasoning_effort="high"' \
-  --enable fast_mode -c 'service_tier="fast"' \
+  -m gpt-6.1-sol -c 'model_reasoning_effort="high"' \
+  --enable fast_mode -c 'service_tier="ultrafast"' \
   -o /tmp/codex-last.md - <"$P" 2>/dev/null
 ```
 
-- These overrides select the model and service tier, not the provider. Resumed sessions retain their recorded provider; use a fresh worker if it is incompatible with Astra. Do not silently fall back to another model.
+- These overrides select the model and service tier, not the provider. Resumed sessions retain their recorded provider; use a fresh worker if it is incompatible with 6.1 Sol. Do not silently fall back to another model.
 - `--yolo` is the house default; Codex may run commands/tests freely. Keep prompts scoped to the target repo.
 - If `--yolo` is unavailable—either the CLI rejects the flag or the selected model/backend rejects unrestricted execution—replace it with `--approve-for-me` and retry once. Never pass both. Preserve every other argument and constraint.
 - `command codex` bypasses any interactive shell alias. If codex isn't on PATH, it depends on how it was installed:
@@ -240,8 +245,8 @@ For follow-up fixes, resume from the repo directory with the same model, reasoni
 ```bash
 (cd <repo> && command codex exec resume <session-id> \
   --dangerously-bypass-approvals-and-sandbox \
-  -m gpt-6-astra -c 'model_reasoning_effort="high"' \
-  --enable fast_mode -c 'service_tier="fast"' \
+  -m gpt-6.1-sol -c 'model_reasoning_effort="high"' \
+  --enable fast_mode -c 'service_tier="ultrafast"' \
   -o /tmp/codex-last.md - <"$P2" 2>/dev/null)
 ```
 
@@ -288,8 +293,8 @@ For runs you must not babysit, trade the stderr suppression for a log and watch 
 
 ```bash
 command codex exec --yolo -C <repo> \
-  -m gpt-6-astra -c 'model_reasoning_effort="high"' \
-  --enable fast_mode -c 'service_tier="fast"' \
+  -m gpt-6.1-sol -c 'model_reasoning_effort="high"' \
+  --enable fast_mode -c 'service_tier="ultrafast"' \
   -o "$OUT" - <"$P" > "$LOG" 2>&1
 # Claude Code: run the line above as its own Bash run_in_background call
 # (tracked chip + completion notification). Append `&` + a PID file ONLY in
@@ -303,8 +308,8 @@ command codex exec --yolo -C <repo> \
 ```bash
 (cd <repo> && command codex exec resume <session-id> \
   --dangerously-bypass-approvals-and-sandbox \
-  -m gpt-6-astra -c 'model_reasoning_effort="high"' \
-  --enable fast_mode -c 'service_tier="fast"' \
+  -m gpt-6.1-sol -c 'model_reasoning_effort="high"' \
+  --enable fast_mode -c 'service_tier="ultrafast"' \
   -o "$OUT" - <<< "You were interrupted. Continue exactly where you left off; finish the task and produce the required final report.")
 ```
 

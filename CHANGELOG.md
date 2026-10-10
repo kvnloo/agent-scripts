@@ -6,6 +6,8 @@ summary: Timeline of guardrail helper changes mirrored from Sweetistics and rela
 
 ## Unreleased
 
+- Default `codex-first` workers and autoreviews to GPT-6.1 Sol with high reasoning on the Ultrafast tier (Fast is now the opt-in); add 6.1 Sol to the `codex-huge-context` catalogue policy and preflight.
+
 - Keep Codex workers on Astra with high reasoning and Fast/priority by default; document Ultrafast as an explicit per-launch option without changing saved defaults.
 
 - Fix the Markdown converter commands to install PDF and Office extras, and document charset overrides for text files. Thanks @pereponkin! (#43)
